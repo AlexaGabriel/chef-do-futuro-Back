@@ -1,0 +1,112 @@
+@baseUrl = http://localhost:3000
+@apiUrl = {{baseUrl}}/api/v1
+
+### Health Check
+GET {{baseUrl}}/health
+
+### Listar todos os alunos
+GET {{apiUrl}}/alunos
+
+### Listar alunos com filtros
+GET {{apiUrl}}/alunos?status=ativo&busca=maria
+
+### Buscar aluno por ID
+GET {{apiUrl}}/alunos/REPLACE_WITH_ALUNO_ID
+
+### Criar novo aluno
+POST {{apiUrl}}/alunos
+Content-Type: application/json
+
+{
+  "nome": "Carlos Pereira",
+  "email": "carlos.pereira@email.com",
+  "telefone": "(11) 91234-5678",
+  "dataNascimento": "1997-03-20",
+  "cpf": "456.789.012-33",
+  "nivelCulinaria": "intermediario",
+  "turmas": [],
+  "observacoes": "Interesse em culinária asiática"
+}
+
+### Atualizar aluno
+PATCH {{apiUrl}}/alunos/REPLACE_WITH_ALUNO_ID
+Content-Type: application/json
+
+{
+  "nivelCulinaria": "avancado",
+  "observacoes": "Evoluiu rapidamente nas aulas"
+}
+
+### Deletar aluno
+DELETE {{apiUrl}}/alunos/REPLACE_WITH_ALUNO_ID
+
+### Listar todos os professores
+GET {{apiUrl}}/professores
+
+### Listar professores com filtros
+GET {{apiUrl}}/professores?status=ativo&busca=chef
+
+### Buscar professor por ID
+GET {{apiUrl}}/professores/REPLACE_WITH_PROFESSOR_ID
+
+### Criar novo professor
+POST {{apiUrl}}/professores
+Content-Type: application/json
+
+{
+  "nome": "Chef Juliana Santos",
+  "email": "juliana.santos@escola.com",
+  "telefone": "(11) 3456-7893",
+  "cpf": "789.012.345-66",
+  "especialidades": ["Culinária Vegetariana", "Gastronomia Saudável"],
+  "disciplinas": [],
+  "bio": "Especialista em alimentação plant-based",
+  "cargaHoraria": 25
+}
+
+### Atualizar professor
+PATCH {{apiUrl}}/professores/REPLACE_WITH_PROFESSOR_ID
+Content-Type: application/json
+
+{
+  "cargaHoraria": 30,
+  "bio": "Especialista em alimentação plant-based com 10 anos de experiência"
+}
+
+### Deletar professor
+DELETE {{apiUrl}}/professores/REPLACE_WITH_PROFESSOR_ID
+
+### Listar todos os coordenadores
+GET {{apiUrl}}/coordenadores
+
+### Listar coordenadores com filtros
+GET {{apiUrl}}/coordenadores?status=ativo&busca=fernanda
+
+### Buscar coordenador por ID
+GET {{apiUrl}}/coordenadores/REPLACE_WITH_COORDENADOR_ID
+
+### Criar novo coordenador
+POST {{apiUrl}}/coordenadores
+Content-Type: application/json
+
+{
+  "nome": "Laura Martins",
+  "email": "laura.martins@escola.com",
+  "telefone": "(11) 3456-7802",
+  "cpf": "901.234.567-88",
+  "departamento": "Eventos",
+  "permissoes": ["gerenciar_turmas", "emitir_relatorios"],
+  "ramal": "1003"
+}
+
+### Atualizar coordenador
+PATCH {{apiUrl}}/coordenadores/REPLACE_WITH_COORDENADOR_ID
+Content-Type: application/json
+
+{
+  "departamento": "Eventos e Marketing",
+  "permissoes": ["gerenciar_turmas", "emitir_relatorios", "gerenciar_financeiro"]
+}
+
+### Deletar coordenador
+DELETE {{apiUrl}}/coordenadores/REPLACE_WITH_COORDENADOR_ID
