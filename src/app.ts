@@ -47,12 +47,13 @@ export async function buildApp(): Promise<FastifyInstance> {
     uiConfig: { docExpansion: 'list', deepLinking: false },
   });
 
+
   app.get(
     '/health',
     {
       schema: {
         tags: ['Health'],
-        summary: 'Verificar status da API',
+        summary: 'Health check da API, Micael, Richard, Caua, Gabriel e Alexandre',
         hide: true,
       },
     },
