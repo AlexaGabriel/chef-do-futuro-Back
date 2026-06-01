@@ -6,6 +6,7 @@ import swaggerUi from '@fastify/swagger-ui';
 import { alunoRoutes } from './routes/aluno.routes';
 import { professorRoutes } from './routes/professor.routes';
 import { coordenadorRoutes } from './routes/coordenador.routes';
+import { cursoRoutes } from './routes/curso.routes';
 
 export async function buildApp(): Promise<FastifyInstance> {
   const app = Fastify({
@@ -38,6 +39,7 @@ export async function buildApp(): Promise<FastifyInstance> {
         { name: 'Alunos', description: 'Operações de cadastro de alunos' },
         { name: 'Professores', description: 'Operações de cadastro de professores' },
         { name: 'Coordenadores', description: 'Operações de cadastro de coordenadores' },
+        { name: 'Cursos', description: 'Operações de gerenciamento de cursos' },
       ],
     },
   });
@@ -67,6 +69,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   app.register(alunoRoutes, { prefix: '/api/v1/alunos' });
   app.register(professorRoutes, { prefix: '/api/v1/professores' });
   app.register(coordenadorRoutes, { prefix: '/api/v1/coordenadores' });
+  app.register(cursoRoutes, { prefix: '/api/v1/cursos' });
 
   app.setNotFoundHandler((req: any, reply: any) => {
     reply.code(404).send({

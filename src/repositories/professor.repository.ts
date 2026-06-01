@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma';
-import { UserRole, StatusUsuario } from '@prisma/client';
+import { UserRole, StatusUsuario } from '../types';
 import {
   CriarProfessorDTO,
   AtualizarProfessorDTO,
@@ -64,20 +64,33 @@ export class ProfessorRepository {
   async criar(dto: CriarProfessorDTO) {
     return prisma.professor.create({
       data: {
-        ...dto,
+        nome: dto.nome,
+        email: dto.email,
+        telefone: dto.telefone,
+        cpf: dto.cpf,
+        bio: dto.bio,
+        cargaHoraria: dto.cargaHoraria,
+        especialidades: JSON.stringify(dto.especialidades),
+        disciplinas: JSON.stringify(dto.disciplinas ?? []),
         registro: this.gerarRegistro(),
         role: UserRole.PROFESSOR,
         status: StatusUsuario.ATIVO,
-        disciplinas: dto.disciplinas ?? [],
       },
     });
   }
 
   async atualizar(id: string, dto: AtualizarProfessorDTO) {
     try {
+      const data: any = { ...dto };
+      if (dto.especialidades) {
+        data.especialidades = JSON.stringify(dto.especialidades);
+      }
+      if (dto.disciplinas) {
+        data.disciplinas = JSON.stringify(dto.disciplinas);
+      }
       return await prisma.professor.update({
         where: { id },
-        data: dto,
+        data,
       });
     } catch {
       return null;
@@ -99,26 +112,5 @@ export class ProfessorRepository {
   async contar(): Promise<number> {
     return prisma.professor.count();
   }
-}
-
-async criar(dto: CriarProfessorDTO) {
-  const { disciplinas, ...dados } = dto;
-
-  return prisma.professor.create({
-    data: {
-      ...dados,
-      registro: this.gerarRegistro(),
-      role: UserRole.PROFESSOR,
-      status: StatusUsuario.ATIVO,
-
-      disciplinas: {
-        connect: disciplinas?.map((id) => ({ id })) ?? [],
-      },
-    },
-
-    include: {
-      disciplinas: true,
-    },
-  });
 }
 

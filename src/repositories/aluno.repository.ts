@@ -1,7 +1,5 @@
-import { PrismaClient, UserRole, StatusUsuario } from '@prisma/client';
-import { CriarAlunoDTO, AtualizarAlunoDTO, QueryParams } from '../types';
-
-const prisma = new PrismaClient();
+import { CriarAlunoDTO, AtualizarAlunoDTO, QueryParams, UserRole, StatusUsuario } from '../types';
+import { prisma } from '../lib/prisma';
 
 export class AlunoRepository {
   private gerarMatricula(): string {
@@ -59,20 +57,30 @@ export class AlunoRepository {
   async criar(dto: CriarAlunoDTO) {
     return prisma.aluno.create({
       data: {
-        ...dto,
+        nome: dto.nome,
+        email: dto.email,
+        telefone: dto.telefone,
+        dataNascimento: dto.dataNascimento,
+        cpf: dto.cpf,
+        nivelCulinaria: dto.nivelCulinaria,
+        observacoes: dto.observacoes,
+        turmas: JSON.stringify(dto.turmas ?? []),
         matricula: this.gerarMatricula(),
         role: UserRole.ALUNO,
         status: StatusUsuario.ATIVO,
-        turmas: dto.turmas ?? [],
       },
     });
   }
 
   async atualizar(id: string, dto: AtualizarAlunoDTO) {
     try {
+      const data: any = { ...dto };
+      if (dto.turmas) {
+        data.turmas = JSON.stringify(dto.turmas);
+      }
       return await prisma.aluno.update({
         where: { id },
-        data: dto,
+        data,
       });
     } catch {
       return null;

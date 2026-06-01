@@ -159,3 +159,72 @@ export interface QueryParams {
   busca?: string;
   status?: StatusUsuario;
 }
+
+export enum NivelCurso {
+  INICIANTE = 'iniciante',
+  INTERMEDIARIO = 'intermediario',
+  AVANCADO = 'avancado',
+}
+
+export enum StatusCurso {
+  RASCUNHO = 'rascunho',
+  PUBLICADO = 'publicado',
+  ARQUIVADO = 'arquivado',
+}
+
+export interface Licao {
+  id: string;
+  titulo: string;
+  duracao: number;
+  videoUrl?: string;
+  conteudo?: string;
+  ordem: number;
+  concluida?: boolean;
+}
+
+export interface Secao {
+  id: string;
+  titulo: string;
+  descricao?: string;
+  ordem: number;
+  licoes: Licao[];
+}
+
+export interface Curso extends BaseEntity {
+  titulo: string;
+  descricao: string;
+  imagemUrl: string;
+  nivel: NivelCurso;
+  status: StatusCurso;
+  duracao: number;
+  secoes: Secao[];
+  professorId: string;
+  categoria: string;
+  tags: string[];
+  quantidadeAlunos: number;
+}
+
+export interface CriarCursoDTO {
+  titulo: string;
+  descricao: string;
+  imagemUrl: string;
+  nivel: NivelCurso;
+  duracao: number;
+  professorId: string;
+  categoria: string;
+  tags?: string[];
+  secoes?: Secao[];
+}
+
+export interface AtualizarCursoDTO {
+  titulo?: string;
+  descricao?: string;
+  imagemUrl?: string;
+  nivel?: NivelCurso;
+  status?: StatusCurso;
+  duracao?: number;
+  professorId?: string;
+  categoria?: string;
+  tags?: string[];
+  secoes?: Secao[];
+}
