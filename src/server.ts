@@ -6,7 +6,7 @@ const HOST = process.env.HOST || '0.0.0.0';
 
 async function start() {
   try {
-    seedDatabase();
+    await seedDatabase();
     const app = await buildApp();
     await app.listen({ port: PORT, host: HOST });
 

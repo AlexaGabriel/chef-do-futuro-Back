@@ -1,18 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
-import {
-  Aluno,
-  Professor,
-  Coordenador,
-  UserRole,
-  StatusUsuario,
-  NivelCulinaria,
-} from '../types';
-
-export const db = {
-  alunos: new Map<string, Aluno>(),
-  professores: new Map<string, Professor>(),
-  coordenadores: new Map<string, Coordenador>(),
-};
+import { prisma } from '../lib/prisma';
 
 function gerarMatricula(): string {
   const ano = new Date().getFullYear();
@@ -30,166 +16,250 @@ function gerarRegistro(tipo: 'PROF' | 'COORD'): string {
   return `${tipo}${ano}${numero}`;
 }
 
-export function seedDatabase(): void {
-  const now = new Date().toISOString();
+export async function seedDatabase(): Promise<void> {
+  try {
+    const alunosCount = await prisma.aluno.count();
+    if (alunosCount > 0) {
+      console.log('✅ Database já populado, pulando seed...');
+      return;
+    }
 
-  const aluno1: Aluno = {
-    id: uuidv4(),
-    role: UserRole.ALUNO,
-    nome: 'Maria Silva',
-    email: 'maria.silva@email.com',
-    telefone: '(11) 98765-4321',
-    dataNascimento: '1995-05-15',
-    cpf: '123.456.789-00',
-    matricula: gerarMatricula(),
-    status: StatusUsuario.ATIVO,
-    nivelCulinaria: NivelCulinaria.INICIANTE,
-    turmas: [],
-    observacoes: 'Interesse em confeitaria',
-    criadoEm: now,
-    atualizadoEm: now,
-  };
+    const professor1 = await prisma.professor.create({
+      data: {
+        nome: 'Chef Carlos Mendes',
+        email: 'carlos.mendes@escola.com',
+        telefone: '(11) 3456-7890',
+        cpf: '456.789.012-33',
+        registro: gerarRegistro('PROF'),
+        role: 'professor',
+        status: 'ativo',
+        especialidades: JSON.stringify(['Culinária Italiana', 'Massas Artesanais']),
+        disciplinas: JSON.stringify([]),
+        bio: 'Chef com 15 anos de experiência em restaurantes estrelados',
+        cargaHoraria: 40,
+      },
+    });
 
-  const aluno2: Aluno = {
-    id: uuidv4(),
-    role: UserRole.ALUNO,
-    nome: 'João Santos',
-    email: 'joao.santos@email.com',
-    telefone: '(11) 97654-3210',
-    dataNascimento: '1998-08-22',
-    cpf: '234.567.890-11',
-    matricula: gerarMatricula(),
-    status: StatusUsuario.ATIVO,
-    nivelCulinaria: NivelCulinaria.INTERMEDIARIO,
-    turmas: [],
-    criadoEm: now,
-    atualizadoEm: now,
-  };
+    const professor2 = await prisma.professor.create({
+      data: {
+        nome: 'Chef Patricia Oliveira',
+        email: 'patricia.oliveira@escola.com',
+        telefone: '(11) 3456-7891',
+        cpf: '567.890.123-44',
+        registro: gerarRegistro('PROF'),
+        role: 'professor',
+        status: 'ativo',
+        especialidades: JSON.stringify(['Confeitaria', 'Chocolateria']),
+        disciplinas: JSON.stringify([]),
+        bio: 'Especialista em doces finos e confeitaria francesa',
+        cargaHoraria: 30,
+      },
+    });
 
-  const aluno3: Aluno = {
-    id: uuidv4(),
-    role: UserRole.ALUNO,
-    nome: 'Ana Costa',
-    email: 'ana.costa@email.com',
-    telefone: '(21) 99876-5432',
-    dataNascimento: '2000-03-10',
-    cpf: '345.678.901-22',
-    matricula: gerarMatricula(),
-    status: StatusUsuario.ATIVO,
-    nivelCulinaria: NivelCulinaria.AVANCADO,
-    turmas: [],
-    observacoes: 'Experiência em gastronomia francesa',
-    criadoEm: now,
-    atualizadoEm: now,
-  };
+    const professor3 = await prisma.professor.create({
+      data: {
+        nome: 'Chef Roberto Alves',
+        email: 'roberto.alves@escola.com',
+        telefone: '(21) 3456-7892',
+        cpf: '678.901.234-55',
+        registro: gerarRegistro('PROF'),
+        role: 'professor',
+        status: 'ativo',
+        especialidades: JSON.stringify(['Gastronomia Contemporânea', 'Técnicas Moleculares']),
+        disciplinas: JSON.stringify([]),
+        cargaHoraria: 35,
+      },
+    });
 
-  const professor1: Professor = {
-    id: uuidv4(),
-    role: UserRole.PROFESSOR,
-    nome: 'Chef Carlos Mendes',
-    email: 'carlos.mendes@escola.com',
-    telefone: '(11) 3456-7890',
-    cpf: '456.789.012-33',
-    registro: gerarRegistro('PROF'),
-    status: StatusUsuario.ATIVO,
-    especialidades: ['Culinária Italiana', 'Massas Artesanais'],
-    disciplinas: [],
-    bio: 'Chef com 15 anos de experiência em restaurantes estrelados',
-    cargaHoraria: 40,
-    criadoEm: now,
-    atualizadoEm: now,
-  };
+    await prisma.aluno.createMany({
+      data: [
+        {
+          nome: 'Maria Silva',
+          email: 'maria.silva@email.com',
+          telefone: '(11) 98765-4321',
+          dataNascimento: '1995-05-15',
+          cpf: '123.456.789-00',
+          matricula: gerarMatricula(),
+          role: 'aluno',
+          status: 'ativo',
+          nivelCulinaria: 'iniciante',
+          turmas: JSON.stringify([]),
+          observacoes: 'Interesse em confeitaria',
+        },
+        {
+          nome: 'João Santos',
+          email: 'joao.santos@email.com',
+          telefone: '(11) 97654-3210',
+          dataNascimento: '1998-08-22',
+          cpf: '234.567.890-11',
+          matricula: gerarMatricula(),
+          role: 'aluno',
+          status: 'ativo',
+          nivelCulinaria: 'intermediario',
+          turmas: JSON.stringify([]),
+        },
+        {
+          nome: 'Ana Costa',
+          email: 'ana.costa@email.com',
+          telefone: '(21) 99876-5432',
+          dataNascimento: '2000-03-10',
+          cpf: '345.678.901-22',
+          matricula: gerarMatricula(),
+          role: 'aluno',
+          status: 'ativo',
+          nivelCulinaria: 'avancado',
+          turmas: JSON.stringify([]),
+          observacoes: 'Experiência em gastronomia francesa',
+        },
+      ],
+    });
 
-  const professor2: Professor = {
-    id: uuidv4(),
-    role: UserRole.PROFESSOR,
-    nome: 'Chef Patricia Oliveira',
-    email: 'patricia.oliveira@escola.com',
-    telefone: '(11) 3456-7891',
-    cpf: '567.890.123-44',
-    registro: gerarRegistro('PROF'),
-    status: StatusUsuario.ATIVO,
-    especialidades: ['Confeitaria', 'Chocolateria'],
-    disciplinas: [],
-    bio: 'Especialista em doces finos e confeitaria francesa',
-    cargaHoraria: 30,
-    criadoEm: now,
-    atualizadoEm: now,
-  };
+    await prisma.coordenador.createMany({
+      data: [
+        {
+          nome: 'Fernanda Lima',
+          email: 'fernanda.lima@escola.com',
+          telefone: '(11) 3456-7800',
+          cpf: '789.012.345-66',
+          registro: gerarRegistro('COORD'),
+          role: 'coordenador',
+          status: 'ativo',
+          departamento: 'Acadêmico',
+          permissoes: JSON.stringify([
+            'gerenciar_alunos',
+            'gerenciar_professores',
+            'gerenciar_turmas',
+            'gerenciar_disciplinas',
+          ]),
+          ramal: '1001',
+        },
+        {
+          nome: 'Ricardo Pereira',
+          email: 'ricardo.pereira@escola.com',
+          telefone: '(11) 3456-7801',
+          cpf: '890.123.456-77',
+          registro: gerarRegistro('COORD'),
+          role: 'coordenador',
+          status: 'ativo',
+          departamento: 'Administrativo',
+          permissoes: JSON.stringify(['emitir_relatorios', 'gerenciar_financeiro']),
+          ramal: '1002',
+        },
+      ],
+    });
 
-  const professor3: Professor = {
-    id: uuidv4(),
-    role: UserRole.PROFESSOR,
-    nome: 'Chef Roberto Alves',
-    email: 'roberto.alves@escola.com',
-    telefone: '(21) 3456-7892',
-    cpf: '678.901.234-55',
-    registro: gerarRegistro('PROF'),
-    status: StatusUsuario.ATIVO,
-    especialidades: ['Gastronomia Contemporânea', 'Técnicas Moleculares'],
-    disciplinas: [],
-    cargaHoraria: 35,
-    criadoEm: now,
-    atualizadoEm: now,
-  };
+    await prisma.curso.createMany({
+      data: [
+        {
+          titulo: 'Massa Caseira',
+          descricao: 'Aprenda a fazer massas caseiras deliciosas do zero',
+          imagemUrl: 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb',
+          nivel: 'iniciante',
+          status: 'publicado',
+          duracao: 20,
+          professorId: professor1.id,
+          categoria: 'Massas',
+          tags: JSON.stringify(['massa', 'italiano', 'iniciante']),
+          quantidadeAlunos: 45,
+          secoes: JSON.stringify([
+            {
+              id: '1',
+              titulo: 'Boas-vindas',
+              ordem: 1,
+              licoes: [{ id: '1-1', titulo: 'Introdução à Massa Caseira', duracao: 10, ordem: 1 }],
+            },
+          ]),
+        },
+        {
+          titulo: 'Sushi',
+          descricao: 'Técnicas autênticas de preparação de sushi japonês',
+          imagemUrl: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351',
+          nivel: 'intermediario',
+          status: 'publicado',
+          duracao: 30,
+          professorId: professor3.id,
+          categoria: 'Culinária Japonesa',
+          tags: JSON.stringify(['sushi', 'japonês', 'peixe']),
+          quantidadeAlunos: 32,
+          secoes: JSON.stringify([]),
+        },
+        {
+          titulo: 'Tacos',
+          descricao: 'Descubra os sabores autênticos da culinária mexicana',
+          imagemUrl: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47',
+          nivel: 'iniciante',
+          status: 'publicado',
+          duracao: 15,
+          professorId: professor1.id,
+          categoria: 'Culinária Mexicana',
+          tags: JSON.stringify(['tacos', 'mexicano', 'temperos']),
+          quantidadeAlunos: 28,
+          secoes: JSON.stringify([]),
+        },
+        {
+          titulo: 'Macarons',
+          descricao: 'Domine a arte dos macarons franceses perfeitos',
+          imagemUrl: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43',
+          nivel: 'avancado',
+          status: 'publicado',
+          duracao: 25,
+          professorId: professor2.id,
+          categoria: 'Confeitaria',
+          tags: JSON.stringify(['macarons', 'francês', 'confeitaria']),
+          quantidadeAlunos: 18,
+          secoes: JSON.stringify([]),
+        },
+        {
+          titulo: 'Frango Assado',
+          descricao: 'Técnicas profissionais para o frango assado perfeito',
+          imagemUrl: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6',
+          nivel: 'intermediario',
+          status: 'publicado',
+          duracao: 18,
+          professorId: professor3.id,
+          categoria: 'Aves',
+          tags: JSON.stringify(['frango', 'assados', 'carnes']),
+          quantidadeAlunos: 52,
+          secoes: JSON.stringify([]),
+        },
+        {
+          titulo: 'Pão Artesanal',
+          descricao: 'Do fermento natural ao pão crocante perfeito',
+          imagemUrl: 'https://images.unsplash.com/photo-1509440159596-0249088772ff',
+          nivel: 'intermediario',
+          status: 'publicado',
+          duracao: 35,
+          professorId: professor1.id,
+          categoria: 'Panificação',
+          tags: JSON.stringify(['pão', 'fermento', 'artesanal']),
+          quantidadeAlunos: 67,
+          secoes: JSON.stringify([]),
+        },
+      ],
+    });
 
-  const coordenador1: Coordenador = {
-    id: uuidv4(),
-    role: UserRole.COORDENADOR,
-    nome: 'Fernanda Lima',
-    email: 'fernanda.lima@escola.com',
-    telefone: '(11) 3456-7800',
-    cpf: '789.012.345-66',
-    registro: gerarRegistro('COORD'),
-    status: StatusUsuario.ATIVO,
-    departamento: 'Acadêmico',
-    permissoes: [
-      'gerenciar_alunos',
-      'gerenciar_professores',
-      'gerenciar_turmas',
-      'gerenciar_disciplinas',
-    ],
-    ramal: '1001',
-    criadoEm: now,
-    atualizadoEm: now,
-  };
+    const stats = {
+      alunos: await prisma.aluno.count(),
+      professores: await prisma.professor.count(),
+      coordenadores: await prisma.coordenador.count(),
+      cursos: await prisma.curso.count(),
+    };
 
-  const coordenador2: Coordenador = {
-    id: uuidv4(),
-    role: UserRole.COORDENADOR,
-    nome: 'Ricardo Pereira',
-    email: 'ricardo.pereira@escola.com',
-    telefone: '(11) 3456-7801',
-    cpf: '890.123.456-77',
-    registro: gerarRegistro('COORD'),
-    status: StatusUsuario.ATIVO,
-    departamento: 'Administrativo',
-    permissoes: ['emitir_relatorios', 'gerenciar_financeiro'],
-    ramal: '1002',
-    criadoEm: now,
-    atualizadoEm: now,
-  };
-
-  db.alunos.set(aluno1.id, aluno1);
-  db.alunos.set(aluno2.id, aluno2);
-  db.alunos.set(aluno3.id, aluno3);
-
-  db.professores.set(professor1.id, professor1);
-  db.professores.set(professor2.id, professor2);
-  db.professores.set(professor3.id, professor3);
-
-  db.coordenadores.set(coordenador1.id, coordenador1);
-  db.coordenadores.set(coordenador2.id, coordenador2);
-
-  console.log('✅ Database populado com sucesso!');
-  console.log(`   - ${db.alunos.size} alunos`);
-  console.log(`   - ${db.professores.size} professores`);
-  console.log(`   - ${db.coordenadores.size} coordenadores`);
+    console.log('✅ Database populado com sucesso!');
+    console.log(`   - ${stats.alunos} alunos`);
+    console.log(`   - ${stats.professores} professores`);
+    console.log(`   - ${stats.coordenadores} coordenadores`);
+    console.log(`   - ${stats.cursos} cursos`);
+  } catch (error) {
+    console.error('❌ Erro ao popular database:', error);
+    throw error;
+  }
 }
 
-export function clearDatabase(): void {
-  db.alunos.clear();
-  db.professores.clear();
-  db.coordenadores.clear();
+export async function clearDatabase(): Promise<void> {
+  await prisma.curso.deleteMany();
+  await prisma.aluno.deleteMany();
+  await prisma.professor.deleteMany();
+  await prisma.coordenador.deleteMany();
   console.log('🗑️  Database limpo');
 }

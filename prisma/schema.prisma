@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Aluno {
+  id              String   @id @default(uuid())
+  role            String   @default("aluno")
+  nome            String
+  email           String   @unique
+  telefone        String
+  dataNascimento  String
+  cpf             String   @unique
+  matricula       String   @unique
+  status          String   @default("ativo")
+  nivelCulinaria  String
+  turmas          String   // JSON array as string
+  observacoes     String?
+  criadoEm        DateTime @default(now())
+  atualizadoEm    DateTime @updatedAt
+
+  @@map("alunos")
+}
+
+model Professor {
+  id            String   @id @default(uuid())
+  role          String   @default("professor")
+  nome          String
+  email         String   @unique
+  telefone      String
+  cpf           String   @unique
+  registro      String   @unique
+  status        String   @default("ativo")
+  especialidades String  // JSON array as string
+  disciplinas   String   // JSON array as string
+  bio           String?
+  cargaHoraria  Int
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @updatedAt
+
+  cursos        Curso[]
+
+  @@map("professores")
+}
+
+model Coordenador {
+  id           String   @id @default(uuid())
+  role         String   @default("coordenador")
+  nome         String
+  email        String   @unique
+  telefone     String
+  cpf          String   @unique
+  registro     String   @unique
+  status       String   @default("ativo")
+  departamento String
+  permissoes   String   // JSON array as string
+  ramal        String?
+  criadoEm     DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  @@map("coordenadores")
+}
+
+model Curso {
+  id                String   @id @default(uuid())
+  titulo            String
+  descricao         String
+  imagemUrl         String
+  nivel             String
+  status            String   @default("rascunho")
+  duracao           Int
+  professorId       String
+  categoria         String
+  tags              String   // JSON array as string
+  quantidadeAlunos  Int      @default(0)
+  secoes            String   // JSON array as string
+  criadoEm          DateTime @default(now())
+  atualizadoEm      DateTime @updatedAt
+
+  professor         Professor @relation(fields: [professorId], references: [id])
+
+  @@map("cursos")
+}

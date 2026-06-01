@@ -1,7 +1,5 @@
-import { PrismaClient, UserRole, StatusUsuario } from '@prisma/client';
-import { CriarAlunoDTO, AtualizarAlunoDTO, QueryParams } from '../types';
-
-const prisma = new PrismaClient();
+import { CriarAlunoDTO, AtualizarAlunoDTO, QueryParams, UserRole, StatusUsuario } from '../types';
+import { prisma } from '../lib/prisma';
 
 export class AlunoRepository {
   private gerarMatricula(): string {

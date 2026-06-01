@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma';
-import { UserRole, StatusUsuario } from '@prisma/client';
+import { UserRole, StatusUsuario } from '../types';
 import {
   CriarCoordenadorDTO,
   AtualizarCoordenadorDTO,

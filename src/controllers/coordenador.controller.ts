@@ -13,7 +13,7 @@ export class CoordenadorController {
     req: FastifyRequest<{ Querystring: QueryParams }>,
     reply: FastifyReply
   ) {
-    const coordenadores = coordenadorRepo.listarTodos(req.query);
+    const coordenadores = await coordenadorRepo.listarTodos(req.query);
     return reply.code(200).send({
       sucesso: true,
       dados: coordenadores,
@@ -24,7 +24,7 @@ export class CoordenadorController {
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply
   ) {
-    const coordenador = coordenadorRepo.buscarPorId(req.params.id);
+    const coordenador = await coordenadorRepo.buscarPorId(req.params.id);
 
     if (!coordenador) {
       return reply.code(404).send({
@@ -45,21 +45,21 @@ export class CoordenadorController {
   ) {
     const { email, cpf } = req.body;
 
-    if (coordenadorRepo.buscarPorEmail(email)) {
+    if (await coordenadorRepo.buscarPorEmail(email)) {
       return reply.code(400).send({
         sucesso: false,
         erro: 'Email já cadastrado',
       });
     }
 
-    if (coordenadorRepo.buscarPorCpf(cpf)) {
+    if (await coordenadorRepo.buscarPorCpf(cpf)) {
       return reply.code(400).send({
         sucesso: false,
         erro: 'CPF já cadastrado',
       });
     }
 
-    const novoCoordenador = coordenadorRepo.criar(req.body);
+    const novoCoordenador = await coordenadorRepo.criar(req.body);
 
     return reply.code(201).send({
       sucesso: true,
@@ -78,7 +78,7 @@ export class CoordenadorController {
     const { id } = req.params;
     const dto = req.body;
 
-    if (!coordenadorRepo.buscarPorId(id)) {
+    if (!(await coordenadorRepo.buscarPorId(id))) {
       return reply.code(404).send({
         sucesso: false,
         erro: 'Coordenador não encontrado',
@@ -86,7 +86,7 @@ export class CoordenadorController {
     }
 
     if (dto.email) {
-      const coordenadorComEmail = coordenadorRepo.buscarPorEmail(dto.email);
+      const coordenadorComEmail = await coordenadorRepo.buscarPorEmail(dto.email);
       if (coordenadorComEmail && coordenadorComEmail.id !== id) {
         return reply.code(400).send({
           sucesso: false,
@@ -95,7 +95,7 @@ export class CoordenadorController {
       }
     }
 
-    const coordenadorAtualizado = coordenadorRepo.atualizar(id, dto);
+    const coordenadorAtualizado = await coordenadorRepo.atualizar(id, dto);
 
     return reply.code(200).send({
       sucesso: true,
@@ -110,14 +110,14 @@ export class CoordenadorController {
   ) {
     const { id } = req.params;
 
-    if (!coordenadorRepo.buscarPorId(id)) {
+    if (!(await coordenadorRepo.buscarPorId(id))) {
       return reply.code(404).send({
         sucesso: false,
         erro: 'Coordenador não encontrado',
       });
     }
 
-    coordenadorRepo.deletar(id);
+    await coordenadorRepo.deletar(id);
 
     return reply.code(200).send({
       sucesso: true,

@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma';
-import { UserRole, StatusUsuario } from '@prisma/client';
+import { UserRole, StatusUsuario } from '../types';
 import {
   CriarProfessorDTO,
   AtualizarProfessorDTO,
@@ -99,26 +99,5 @@ export class ProfessorRepository {
   async contar(): Promise<number> {
     return prisma.professor.count();
   }
-}
-
-async criar(dto: CriarProfessorDTO) {
-  const { disciplinas, ...dados } = dto;
-
-  return prisma.professor.create({
-    data: {
-      ...dados,
-      registro: this.gerarRegistro(),
-      role: UserRole.PROFESSOR,
-      status: StatusUsuario.ATIVO,
-
-      disciplinas: {
-        connect: disciplinas?.map((id) => ({ id })) ?? [],
-      },
-    },
-
-    include: {
-      disciplinas: true,
-    },
-  });
 }
 
