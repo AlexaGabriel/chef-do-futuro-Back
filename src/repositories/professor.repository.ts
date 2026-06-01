@@ -64,20 +64,33 @@ export class ProfessorRepository {
   async criar(dto: CriarProfessorDTO) {
     return prisma.professor.create({
       data: {
-        ...dto,
+        nome: dto.nome,
+        email: dto.email,
+        telefone: dto.telefone,
+        cpf: dto.cpf,
+        bio: dto.bio,
+        cargaHoraria: dto.cargaHoraria,
+        especialidades: JSON.stringify(dto.especialidades),
+        disciplinas: JSON.stringify(dto.disciplinas ?? []),
         registro: this.gerarRegistro(),
         role: UserRole.PROFESSOR,
         status: StatusUsuario.ATIVO,
-        disciplinas: dto.disciplinas ?? [],
       },
     });
   }
 
   async atualizar(id: string, dto: AtualizarProfessorDTO) {
     try {
+      const data: any = { ...dto };
+      if (dto.especialidades) {
+        data.especialidades = JSON.stringify(dto.especialidades);
+      }
+      if (dto.disciplinas) {
+        data.disciplinas = JSON.stringify(dto.disciplinas);
+      }
       return await prisma.professor.update({
         where: { id },
-        data: dto,
+        data,
       });
     } catch {
       return null;

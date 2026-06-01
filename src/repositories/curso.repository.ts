@@ -3,6 +3,7 @@ import {
   Curso,
   CriarCursoDTO,
   AtualizarCursoDTO,
+  NivelCurso,
   StatusCurso,
   QueryParams,
 } from '../types';
@@ -24,6 +25,8 @@ export class CursoRepository {
 
     return cursos.map((c: any) => ({
       ...c,
+      nivel: c.nivel as NivelCurso,
+      status: c.status as StatusCurso,
       criadoEm: c.criadoEm.toISOString(),
       atualizadoEm: c.atualizadoEm.toISOString(),
       tags: JSON.parse(c.tags),
@@ -40,6 +43,8 @@ export class CursoRepository {
 
     return {
       ...curso,
+      nivel: curso.nivel as NivelCurso,
+      status: curso.status as StatusCurso,
       criadoEm: curso.criadoEm.toISOString(),
       atualizadoEm: curso.atualizadoEm.toISOString(),
       tags: JSON.parse(curso.tags),
@@ -54,6 +59,8 @@ export class CursoRepository {
 
     return cursos.map((c: any) => ({
       ...c,
+      nivel: c.nivel as NivelCurso,
+      status: c.status as StatusCurso,
       criadoEm: c.criadoEm.toISOString(),
       atualizadoEm: c.atualizadoEm.toISOString(),
       tags: JSON.parse(c.tags),
@@ -73,6 +80,8 @@ export class CursoRepository {
 
     return cursos.map((c: any) => ({
       ...c,
+      nivel: c.nivel as NivelCurso,
+      status: c.status as StatusCurso,
       criadoEm: c.criadoEm.toISOString(),
       atualizadoEm: c.atualizadoEm.toISOString(),
       tags: JSON.parse(c.tags),
@@ -99,6 +108,8 @@ export class CursoRepository {
 
     return {
       ...curso,
+      nivel: curso.nivel as NivelCurso,
+      status: curso.status as StatusCurso,
       criadoEm: curso.criadoEm.toISOString(),
       atualizadoEm: curso.atualizadoEm.toISOString(),
       tags: JSON.parse(curso.tags),
@@ -129,6 +140,8 @@ export class CursoRepository {
 
     return {
       ...curso,
+      nivel: curso.nivel as NivelCurso,
+      status: curso.status as StatusCurso,
       criadoEm: curso.criadoEm.toISOString(),
       atualizadoEm: curso.atualizadoEm.toISOString(),
       tags: JSON.parse(curso.tags),

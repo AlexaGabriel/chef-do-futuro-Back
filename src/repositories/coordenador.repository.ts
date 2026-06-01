@@ -65,6 +65,7 @@ export class CoordenadorRepository {
     return prisma.coordenador.create({
       data: {
         ...dto,
+        permissoes: JSON.stringify(dto.permissoes),
         registro: this.gerarRegistro(),
         role: UserRole.COORDENADOR,
         status: StatusUsuario.ATIVO,
@@ -74,9 +75,13 @@ export class CoordenadorRepository {
 
   async atualizar(id: string, dto: AtualizarCoordenadorDTO) {
     try {
+      const data: any = { ...dto };
+      if (dto.permissoes) {
+        data.permissoes = JSON.stringify(dto.permissoes);
+      }
       return await prisma.coordenador.update({
         where: { id },
-        data: dto,
+        data,
       });
     } catch {
       return null;
