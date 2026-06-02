@@ -5,6 +5,7 @@ import {
   AtualizarProfessorDTO,
   QueryParams,
 } from '../types';
+import { AuthService } from '../services/auth.service';
 
 export class ProfessorRepository {
   private gerarRegistro(): string {
@@ -62,10 +63,13 @@ export class ProfessorRepository {
   }
 
   async criar(dto: CriarProfessorDTO) {
+    const senhaHash = await AuthService.hashPassword(dto.senha);
+    
     return prisma.professor.create({
       data: {
         nome: dto.nome,
         email: dto.email,
+        senha: senhaHash,
         telefone: dto.telefone,
         cpf: dto.cpf,
         bio: dto.bio,

@@ -1,16 +1,23 @@
 # 🍳 Escola de Culinária — API
 
-Backend REST para gerenciamento de alunos, professores e coordenadores.
+Backend REST para gerenciamento de alunos, professores e coordenadores com sistema de autenticação JWT.
 
-**Stack:** Node.js · TypeScript · Fastify · UUID · Zod
+**Stack:** Node.js · TypeScript · Fastify · Prisma · PostgreSQL · JWT · Bcrypt
 
 ---
 
-## Instalação e execução
+## 🚀 Instalação e execução
 
 ```bash
 # Instalar dependências
 npm install
+
+# Configurar variáveis de ambiente
+cp .env.example .env
+# Edite o arquivo .env com suas credenciais
+
+# Aplicar schema do Prisma ao banco
+npx prisma db push
 
 # Rodar em modo desenvolvimento (hot-reload)
 npm run dev
@@ -25,26 +32,68 @@ Documentação interativa (Swagger UI): `http://localhost:3000/docs`
 
 ---
 
-## Estrutura do projeto
+## 🔐 Autenticação
+
+A API utiliza **JWT (JSON Web Tokens)** para autenticação. Cada tipo de usuário (Aluno, Professor, Coordenador) possui seu próprio endpoint de login.
+
+### Endpoints de Login
+- `POST /api/v1/auth/aluno/login`
+- `POST /api/v1/auth/professor/login`
+- `POST /api/v1/auth/coordenador/login`
+
+### Exemplo de Login
+```json
+POST /api/v1/auth/aluno/login
+{
+  "email": "maria.silva@email.com",
+  "senha": "senha123"
+}
+```
+
+**Resposta:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "usuario": {
+    "id": "uuid",
+    "nome": "Maria Silva",
+    "email": "maria.silva@email.com",
+    "role": "ALUNO"
+  }
+}
+```
+
+### Usando o Token
+Inclua o token no header `Authorization` das requisições:
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+📖 **Documentação completa:** [AUTENTICACAO.md](./AUTENTICACAO.md)
+
+---
+
+## 📁 Estrutura do projeto
 
 ```
 src/
 ├── types/          # Interfaces e enums TypeScript
-├── db/             # Banco de dados em memória + seed
-├── repositories/   # Acesso a dados (CRUD direto no Map)
+├── db/             # Seed do banco de dados
+├── repositories/   # Acesso a dados (Prisma)
 ├── controllers/    # Lógica de negócio + respostas HTTP
 ├── routes/         # Definição das rotas + schemas JSON
+├── services/       # Lógica de autenticação (JWT, bcrypt)
+├── middlewares/    # Autenticação e autorização
+├── lib/            # Cliente Prisma
 ├── app.ts          # Factory do Fastify (plugins, rotas, handlers)
 └── server.ts       # Entry point
 ```
 
-> **Banco de dados:** atualmente usa `Map<string, Entity>` em memória para
-> facilitar o início do desenvolvimento. Para produção, substitua os
-> repositories por um ORM (Prisma, Drizzle) apontando para PostgreSQL.
+> **Banco de dados:** PostgreSQL via Prisma ORM
 
 ---
 
-## Endpoints
+## 📝 Endpoints
 
 ### Health
 

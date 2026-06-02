@@ -39,6 +39,7 @@ export interface Aluno extends BaseEntity {
 export interface CriarAlunoDTO {
   nome: string;
   email: string;
+  senha: string;
   telefone: string;
   dataNascimento: string;
   cpf: string;
@@ -75,6 +76,7 @@ export interface Professor extends BaseEntity {
 export interface CriarProfessorDTO {
   nome: string;
   email: string;
+  senha: string;
   telefone: string;
   cpf: string;
   especialidades: string[];
@@ -118,6 +120,7 @@ export type Permissao =
 export interface CriarCoordenadorDTO {
   nome: string;
   email: string;
+  senha: string;
   telefone: string;
   cpf: string;
   departamento: string;
@@ -227,4 +230,35 @@ export interface AtualizarCursoDTO {
   categoria?: string;
   tags?: string[];
   secoes?: Secao[];
+}
+
+// Tipos de Autenticação
+export interface LoginDTO {
+  email: string;
+  senha: string;
+}
+
+export interface LoginResponse {
+  sucesso: boolean;
+  dados?: {
+    token: string;
+    usuario: {
+      id: string;
+      nome: string;
+      email: string;
+      role: UserRole;
+    };
+  };
+  mensagem?: string;
+  erro?: string;
+}
+
+export interface JWTPayload {
+  id: string;
+  email: string;
+  role: UserRole;
+}
+
+export interface AuthRequest {
+  user?: JWTPayload;
 }

@@ -1,5 +1,6 @@
 import { CriarAlunoDTO, AtualizarAlunoDTO, QueryParams, UserRole, StatusUsuario } from '../types';
 import { prisma } from '../lib/prisma';
+import { AuthService } from '../services/auth.service';
 
 export class AlunoRepository {
   private gerarMatricula(): string {
@@ -55,10 +56,13 @@ export class AlunoRepository {
   }
 
   async criar(dto: CriarAlunoDTO) {
+    const senhaHash = await AuthService.hashPassword(dto.senha);
+    
     return prisma.aluno.create({
       data: {
         nome: dto.nome,
         email: dto.email,
+        senha: senhaHash,
         telefone: dto.telefone,
         dataNascimento: dto.dataNascimento,
         cpf: dto.cpf,

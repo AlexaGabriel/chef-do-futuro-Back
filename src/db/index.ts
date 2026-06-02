@@ -1,4 +1,5 @@
 import { prisma } from '../lib/prisma';
+import { AuthService } from '../services/auth.service';
 
 function gerarMatricula(): string {
   const ano = new Date().getFullYear();
@@ -24,10 +25,14 @@ export async function seedDatabase(): Promise<void> {
       return;
     }
 
+    // Senha padrão para todos os usuários de teste: "senha123"
+    const senhaHash = await AuthService.hashPassword('senha123');
+
     const professor1 = await prisma.professor.create({
       data: {
         nome: 'Chef Carlos Mendes',
         email: 'carlos.mendes@escola.com',
+        senha: senhaHash,
         telefone: '(11) 3456-7890',
         cpf: '456.789.012-33',
         registro: gerarRegistro('PROF'),
@@ -44,6 +49,7 @@ export async function seedDatabase(): Promise<void> {
       data: {
         nome: 'Chef Patricia Oliveira',
         email: 'patricia.oliveira@escola.com',
+        senha: senhaHash,
         telefone: '(11) 3456-7891',
         cpf: '567.890.123-44',
         registro: gerarRegistro('PROF'),
@@ -60,6 +66,7 @@ export async function seedDatabase(): Promise<void> {
       data: {
         nome: 'Chef Roberto Alves',
         email: 'roberto.alves@escola.com',
+        senha: senhaHash,
         telefone: '(21) 3456-7892',
         cpf: '678.901.234-55',
         registro: gerarRegistro('PROF'),
@@ -76,6 +83,7 @@ export async function seedDatabase(): Promise<void> {
         {
           nome: 'Maria Silva',
           email: 'maria.silva@email.com',
+          senha: senhaHash,
           telefone: '(11) 98765-4321',
           dataNascimento: '1995-05-15',
           cpf: '123.456.789-00',
@@ -89,6 +97,7 @@ export async function seedDatabase(): Promise<void> {
         {
           nome: 'João Santos',
           email: 'joao.santos@email.com',
+          senha: senhaHash,
           telefone: '(11) 97654-3210',
           dataNascimento: '1998-08-22',
           cpf: '234.567.890-11',
@@ -101,6 +110,7 @@ export async function seedDatabase(): Promise<void> {
         {
           nome: 'Ana Costa',
           email: 'ana.costa@email.com',
+          senha: senhaHash,
           telefone: '(21) 99876-5432',
           dataNascimento: '2000-03-10',
           cpf: '345.678.901-22',
@@ -119,6 +129,7 @@ export async function seedDatabase(): Promise<void> {
         {
           nome: 'Fernanda Lima',
           email: 'fernanda.lima@escola.com',
+          senha: senhaHash,
           telefone: '(11) 3456-7800',
           cpf: '789.012.345-66',
           registro: gerarRegistro('COORD'),
@@ -136,6 +147,7 @@ export async function seedDatabase(): Promise<void> {
         {
           nome: 'Ricardo Pereira',
           email: 'ricardo.pereira@escola.com',
+          senha: senhaHash,
           telefone: '(11) 3456-7801',
           cpf: '890.123.456-77',
           registro: gerarRegistro('COORD'),

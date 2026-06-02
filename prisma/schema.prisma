@@ -15,6 +15,7 @@ model Aluno {
   role            String   @default("aluno")
   nome            String
   email           String   @unique
+  senha           String
   telefone        String
   dataNascimento  String
   cpf             String   @unique
@@ -34,6 +35,7 @@ model Professor {
   role          String   @default("professor")
   nome          String
   email         String   @unique
+  senha         String
   telefone      String
   cpf           String   @unique
   registro      String   @unique
@@ -55,6 +57,7 @@ model Coordenador {
   role         String   @default("coordenador")
   nome         String
   email        String   @unique
+  senha        String
   telefone     String
   cpf          String   @unique
   registro     String   @unique

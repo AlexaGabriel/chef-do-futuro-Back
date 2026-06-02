@@ -5,6 +5,7 @@ import {
   AtualizarCoordenadorDTO,
   QueryParams,
 } from '../types';
+import { AuthService } from '../services/auth.service';
 
 export class CoordenadorRepository {
   private gerarRegistro(): string {
@@ -62,9 +63,17 @@ export class CoordenadorRepository {
   }
 
   async criar(dto: CriarCoordenadorDTO) {
+    const senhaHash = await AuthService.hashPassword(dto.senha);
+    
     return prisma.coordenador.create({
       data: {
-        ...dto,
+        nome: dto.nome,
+        email: dto.email,
+        senha: senhaHash,
+        telefone: dto.telefone,
+        cpf: dto.cpf,
+        departamento: dto.departamento,
+        ramal: dto.ramal,
         permissoes: JSON.stringify(dto.permissoes),
         registro: this.gerarRegistro(),
         role: UserRole.COORDENADOR,
