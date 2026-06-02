@@ -7,6 +7,7 @@ import { alunoRoutes } from './routes/aluno.routes';
 import { professorRoutes } from './routes/professor.routes';
 import { coordenadorRoutes } from './routes/coordenador.routes';
 import { cursoRoutes } from './routes/curso.routes';
+import { authRoutes } from './routes/auth.routes';
 
 export async function buildApp(): Promise<FastifyInstance> {
   const app = Fastify({
@@ -36,10 +37,11 @@ export async function buildApp(): Promise<FastifyInstance> {
         version: '1.0.0',
       },
       tags: [
+        { name: 'Autenticação', description: 'Login de alunos, professores e coordenadores' },
         { name: 'Alunos', description: 'Operações de cadastro de alunos' },
         { name: 'Professores', description: 'Operações de cadastro de professores' },
+        { name: 'Cursos', description: 'Operações de cadastro de cursos' },
         { name: 'Coordenadores', description: 'Operações de cadastro de coordenadores' },
-        { name: 'Cursos', description: 'Operações de gerenciamento de cursos' },
       ],
     },
   });
@@ -66,6 +68,7 @@ export async function buildApp(): Promise<FastifyInstance> {
     }),
   );
 
+  app.register(authRoutes, { prefix: '/api/v1' });
   app.register(alunoRoutes, { prefix: '/api/v1/alunos' });
   app.register(professorRoutes, { prefix: '/api/v1/professores' });
   app.register(coordenadorRoutes, { prefix: '/api/v1/coordenadores' });

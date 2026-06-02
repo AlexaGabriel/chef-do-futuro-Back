@@ -110,3 +110,36 @@ Content-Type: application/json
 
 ### Deletar coordenador
 DELETE {{apiUrl}}/coordenadores/REPLACE_WITH_COORDENADOR_ID
+
+### ===== AUTENTICAÇÃO =====
+# Senha padrão para todos os usuários de teste: "senha123"
+
+### Login Aluno
+# @name loginAluno
+POST {{apiUrl}}/auth/aluno/login
+Content-Type: application/json
+
+{
+  "email": "maria.silva@email.com",
+  "senha": "senha123"
+}
+
+### Login Professor
+# @name loginProfessor
+POST {{apiUrl}}/auth/professor/login
+Content-Type: application/json
+
+{
+  "email": "carlos.mendes@escola.com",
+  "senha": "senha123"
+}
+
+### Login Coordenador
+# @name loginCoordenador
+POST {{apiUrl}}/auth/coordenador/login
+Content-Type: application/json
+
+{
+  "email": "fernanda.lima@escola.com",
+  "senha": "senha123"
+}
