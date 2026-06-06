@@ -91,3 +91,13 @@ model Curso {
 
   @@map("cursos")
 }
+
+model Mensagem {
+  id          String   @id @default(uuid())
+  conteudo    String
+  remetenteId String  
+  sala        String   
+  criadoEm    DateTime @default(now())
+
+  @@map("mensagens")
+}
