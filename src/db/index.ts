@@ -25,7 +25,6 @@ export async function seedDatabase(): Promise<void> {
       return;
     }
 
-    // Senha padrão para todos os usuários de teste: "senha123"
     const senhaHash = await AuthService.hashPassword('senha123');
 
     const professor1 = await prisma.professor.create({
