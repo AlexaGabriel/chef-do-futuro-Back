@@ -59,7 +59,7 @@ export async function buildApp(): Promise<FastifyInstance> {
     },
   });
 
-  app.get('/teste-chat', { schema: { hide: true } }, (req, reply) => {
+  app.get('/teste-chat', { schema: { hide: true } }, (_req, reply) => {
     const html = `
     <!DOCTYPE html>
     <html lang="pt-br">
