@@ -121,4 +121,34 @@ export class AlunoController {
       mensagem: 'Aluno deletado com sucesso',
     });
   }
+
+  async aprovar(
+    req: FastifyRequest<{ Params: { id: string } }>,
+    reply: FastifyReply
+  ) {
+    const { id } = req.params;
+
+    const aluno = await alunoRepo.buscarPorId(id);
+    if (!aluno) {
+      return reply.code(404).send({
+        sucesso: false,
+        erro: 'Aluno não encontrado',
+      });
+    }
+
+    if (aluno.status === 'ativo') {
+      return reply.code(400).send({
+        sucesso: false,
+        erro: 'Aluno já está aprovado',
+      });
+    }
+
+    const alunoAprovado = await alunoRepo.aprovar(id);
+
+    return reply.code(200).send({
+      sucesso: true,
+      dados: alunoAprovado,
+      mensagem: 'Aluno aprovado com sucesso',
+    });
+  }
 }

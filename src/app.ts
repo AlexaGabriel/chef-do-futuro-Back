@@ -10,6 +10,8 @@ import { coordenadorRoutes } from './routes/coordenador.routes';
 import { cursoRoutes } from './routes/curso.routes';
 import { authRoutes } from './routes/auth.routes';
 import { chatRoutes } from './routes/chat.routes';
+import { turmaRoutes } from './routes/turma.routes';
+import { disciplinaRoutes } from './routes/disciplina.routes';
 import { ChatController } from './controllers/chat.controller';
 
 export async function buildApp(): Promise<FastifyInstance> {
@@ -54,6 +56,8 @@ export async function buildApp(): Promise<FastifyInstance> {
         { name: 'Cursos', description: 'Operações de cadastro de cursos' },
         { name: 'Coordenadores', description: 'Operações de cadastro de coordenadores' },
         { name: 'Chat', description: 'Operações de chat' },
+        { name: 'Turmas', description: 'Gestão de turmas dentro de cursos' },
+        { name: 'Disciplinas', description: 'Gestão de disciplinas dentro de cursos' },
         { name: 'Health', description: 'Health check da API' },
       ],
     },
@@ -164,6 +168,8 @@ export async function buildApp(): Promise<FastifyInstance> {
   app.register(professorRoutes, { prefix: '/api/v1/professores' });
   app.register(coordenadorRoutes, { prefix: '/api/v1/coordenadores' });
   app.register(cursoRoutes, { prefix: '/api/v1/cursos' });
+  app.register(turmaRoutes, { prefix: '/api/v1/cursos/:cursoId/turmas' });
+  app.register(disciplinaRoutes, { prefix: '/api/v1/cursos/:cursoId/disciplinas' });
   app.register(chatRoutes, { prefix: '/api/v1/chat' });
 
   app.ready((err) => {

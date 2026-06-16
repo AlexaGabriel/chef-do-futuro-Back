@@ -37,6 +37,13 @@ export class AuthController {
       }
 
       // Verificar status
+      if (aluno.status === 'pendente') {
+        return reply.status(403).send({
+          sucesso: false,
+          erro: 'Cadastro pendente de aprovação. Aguarde um coordenador aprovar sua inscrição.',
+        });
+      }
+
       if (aluno.status !== 'ativo') {
         return reply.status(403).send({
           sucesso: false,
