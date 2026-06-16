@@ -249,11 +249,120 @@ export async function seedDatabase(): Promise<void> {
       ],
     });
 
+    const massaCaseira = (await prisma.curso.findFirst({ where: { titulo: 'Massa Caseira' } }))!;
+    const sushi = (await prisma.curso.findFirst({ where: { titulo: 'Sushi' } }))!;
+    const paoArtesanal = (await prisma.curso.findFirst({ where: { titulo: 'Pão Artesanal' } }))!;
+
+    await prisma.turma.createMany({
+      data: [
+        {
+          nome: 'Turma A - Massas',
+          codigo: 'TUR-MASSA-2024A',
+          cursoId: massaCaseira.id,
+          periodo: 'matutino',
+          capacidade: 25,
+          status: 'ativa',
+          dataInicio: '2024-02-01',
+          dataFim: '2024-06-30',
+        },
+        {
+          nome: 'Turma B - Massas',
+          codigo: 'TUR-MASSA-2024B',
+          cursoId: massaCaseira.id,
+          periodo: 'noturno',
+          capacidade: 20,
+          status: 'ativa',
+          dataInicio: '2024-03-15',
+          dataFim: '2024-08-15',
+        },
+        {
+          nome: 'Turma A - Sushi',
+          codigo: 'TUR-SUSHI-2024A',
+          cursoId: sushi.id,
+          periodo: 'vespertino',
+          capacidade: 15,
+          status: 'ativa',
+          dataInicio: '2024-04-01',
+          dataFim: '2024-09-30',
+        },
+        {
+          nome: 'Turma A - Pães',
+          codigo: 'TUR-PAO-2024A',
+          cursoId: paoArtesanal.id,
+          periodo: 'integral',
+          capacidade: 20,
+          status: 'ativa',
+          dataInicio: '2024-05-01',
+          dataFim: '2024-11-30',
+        },
+      ],
+    });
+
+    await prisma.disciplina.createMany({
+      data: [
+        {
+          nome: 'Fundamentos da Massa',
+          codigo: 'DISC-MASSA-001',
+          cursoId: massaCaseira.id,
+          cargaHoraria: 40,
+          ementa: 'Tipos de farinha, técnicas de sova, descanso e modelagem.',
+          periodo: '1° semestre',
+          status: 'ativa',
+        },
+        {
+          nome: 'Molhos Artesanais',
+          codigo: 'DISC-MASSA-002',
+          cursoId: massaCaseira.id,
+          cargaHoraria: 30,
+          ementa: 'Preparo de molhos clássicos italianos: bolonhesa, pesto, carbonara.',
+          periodo: '1° semestre',
+          status: 'ativa',
+        },
+        {
+          nome: 'Técnicas de Corte Japonês',
+          codigo: 'DISC-SUSHI-001',
+          cursoId: sushi.id,
+          cargaHoraria: 25,
+          ementa: 'Manuseio de facas japonesas, cortes precisos para sashimi e maki.',
+          periodo: '2° semestre',
+          status: 'ativa',
+        },
+        {
+          nome: 'Fermentação Natural',
+          codigo: 'DISC-PAO-001',
+          cursoId: paoArtesanal.id,
+          cargaHoraria: 50,
+          ementa: 'Cultivo de levain, longa fermentação, autólise e scoring.',
+          periodo: '1° semestre',
+          status: 'ativa',
+        },
+      ],
+    });
+
+    await prisma.aluno.create({
+      data: {
+        nome: 'Pedro Pendente',
+        email: 'pedro.pendente@email.com',
+        senha: senhaHash,
+        telefone: '(11) 91234-5678',
+        dataNascimento: '1999-11-20',
+        cpf: '999.888.777-66',
+        matricula: gerarMatricula(),
+        role: 'aluno',
+        status: 'pendente',
+        nivelCulinaria: 'iniciante',
+        turmas: JSON.stringify([]),
+        observacoes: 'Aluno aguardando aprovação do coordenador',
+      },
+    });
+
     const stats = {
       alunos: await prisma.aluno.count(),
       professores: await prisma.professor.count(),
       coordenadores: await prisma.coordenador.count(),
       cursos: await prisma.curso.count(),
+      turmas: await prisma.turma.count(),
+      disciplinas: await prisma.disciplina.count(),
     };
 
     console.log('✅ Database populado com sucesso!');
@@ -261,6 +370,8 @@ export async function seedDatabase(): Promise<void> {
     console.log(`   - ${stats.professores} professores`);
     console.log(`   - ${stats.coordenadores} coordenadores`);
     console.log(`   - ${stats.cursos} cursos`);
+    console.log(`   - ${stats.turmas} turmas`);
+    console.log(`   - ${stats.disciplinas} disciplinas`);
   } catch (error) {
     console.error('❌ Erro ao popular database:', error);
     throw error;
@@ -268,6 +379,9 @@ export async function seedDatabase(): Promise<void> {
 }
 
 export async function clearDatabase(): Promise<void> {
+  await prisma.mensagem.deleteMany();
+  await prisma.turma.deleteMany();
+  await prisma.disciplina.deleteMany();
   await prisma.curso.deleteMany();
   await prisma.aluno.deleteMany();
   await prisma.professor.deleteMany();

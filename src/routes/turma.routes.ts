@@ -1,24 +1,22 @@
 import { FastifyInstance } from 'fastify';
-import { AlunoController } from '../controllers/aluno.controller';
+import { TurmaController } from '../controllers/turma.controller';
 
-const controller = new AlunoController();
+const controller = new TurmaController();
 
-export async function alunoRoutes(app: FastifyInstance) {
+export async function turmaRoutes(app: FastifyInstance) {
 
   app.get(
     '/',
     {
       schema: {
-        tags: ['Alunos'],
-        summary: 'Listar todos os alunos',
-        querystring: {
+        tags: ['Turmas'],
+        summary: 'Listar turmas de um curso',
+        params: {
           type: 'object',
           properties: {
-            pagina: { type: 'number' },
-            limite: { type: 'number' },
-            busca: { type: 'string' },
-             status: { type: 'string', enum: ['ativo', 'inativo', 'suspenso', 'pendente'] },
+            cursoId: { type: 'string' },
           },
+          required: ['cursoId'],
         },
         response: {
           200: {
@@ -34,19 +32,19 @@ export async function alunoRoutes(app: FastifyInstance) {
     controller.listar
   );
 
-
   app.get(
     '/:id',
     {
       schema: {
-        tags: ['Alunos'],
-        summary: 'Buscar aluno por ID',
+        tags: ['Turmas'],
+        summary: 'Buscar turma por ID',
         params: {
           type: 'object',
           properties: {
+            cursoId: { type: 'string' },
             id: { type: 'string' },
           },
-          required: ['id'],
+          required: ['cursoId', 'id'],
         },
         response: {
           200: {
@@ -69,35 +67,32 @@ export async function alunoRoutes(app: FastifyInstance) {
     controller.buscarPorId
   );
 
-
   app.post(
     '/',
     {
       schema: {
-        tags: ['Alunos'],
-        summary: 'Criar novo aluno',
+        tags: ['Turmas'],
+        summary: 'Criar nova turma em um curso',
+        params: {
+          type: 'object',
+          properties: {
+            cursoId: { type: 'string' },
+          },
+          required: ['cursoId'],
+        },
         body: {
           type: 'object',
-          required: [
-            'nome',
-            'email',
-            'telefone',
-            'dataNascimento',
-            'cpf',
-            'nivelCulinaria',
-          ],
+          required: ['nome', 'codigo', 'periodo', 'dataInicio', 'dataFim'],
           properties: {
             nome: { type: 'string' },
-            email: { type: 'string', format: 'email' },
-            telefone: { type: 'string' },
-            dataNascimento: { type: 'string', format: 'date' },
-            cpf: { type: 'string' },
-            nivelCulinaria: {
+            codigo: { type: 'string' },
+            periodo: {
               type: 'string',
-              enum: ['iniciante', 'intermediario', 'avancado'],
+              enum: ['matutino', 'vespertino', 'noturno', 'integral'],
             },
-            turmas: { type: 'array', items: { type: 'string' } },
-            observacoes: { type: 'string' },
+            capacidade: { type: 'number' },
+            dataInicio: { type: 'string' },
+            dataFim: { type: 'string' },
           },
         },
         response: {
@@ -109,7 +104,7 @@ export async function alunoRoutes(app: FastifyInstance) {
               mensagem: { type: 'string' },
             },
           },
-          400: {
+          404: {
             type: 'object',
             properties: {
               sucesso: { type: 'boolean' },
@@ -122,37 +117,36 @@ export async function alunoRoutes(app: FastifyInstance) {
     controller.criar
   );
 
-
   app.patch(
     '/:id',
     {
       schema: {
-        tags: ['Alunos'],
-        summary: 'Atualizar aluno',
+        tags: ['Turmas'],
+        summary: 'Atualizar turma',
         params: {
           type: 'object',
           properties: {
+            cursoId: { type: 'string' },
             id: { type: 'string' },
           },
-          required: ['id'],
+          required: ['cursoId', 'id'],
         },
         body: {
           type: 'object',
           properties: {
             nome: { type: 'string' },
-            email: { type: 'string', format: 'email' },
-            telefone: { type: 'string' },
-            dataNascimento: { type: 'string', format: 'date' },
-            nivelCulinaria: {
+            codigo: { type: 'string' },
+            periodo: {
               type: 'string',
-              enum: ['iniciante', 'intermediario', 'avancado'],
+              enum: ['matutino', 'vespertino', 'noturno', 'integral'],
             },
+            capacidade: { type: 'number' },
             status: {
               type: 'string',
-              enum: ['ativo', 'inativo', 'suspenso', 'pendente'],
+              enum: ['ativa', 'concluida', 'cancelada'],
             },
-            turmas: { type: 'array', items: { type: 'string' } },
-            observacoes: { type: 'string' },
+            dataInicio: { type: 'string' },
+            dataFim: { type: 'string' },
           },
         },
         response: {
@@ -177,19 +171,19 @@ export async function alunoRoutes(app: FastifyInstance) {
     controller.atualizar
   );
 
-
   app.delete(
     '/:id',
     {
       schema: {
-        tags: ['Alunos'],
-        summary: 'Deletar aluno',
+        tags: ['Turmas'],
+        summary: 'Deletar turma',
         params: {
           type: 'object',
           properties: {
+            cursoId: { type: 'string' },
             id: { type: 'string' },
           },
-          required: ['id'],
+          required: ['cursoId', 'id'],
         },
         response: {
           200: {
@@ -210,40 +204,5 @@ export async function alunoRoutes(app: FastifyInstance) {
       },
     },
     controller.deletar
-  );
-
-  app.patch(
-    '/:id/aprovar',
-    {
-      schema: {
-        tags: ['Alunos'],
-        summary: 'Aprovar cadastro de aluno (coordenador)',
-        params: {
-          type: 'object',
-          properties: {
-            id: { type: 'string' },
-          },
-          required: ['id'],
-        },
-        response: {
-          200: {
-            type: 'object',
-            properties: {
-              sucesso: { type: 'boolean' },
-              dados: { type: 'object' },
-              mensagem: { type: 'string' },
-            },
-          },
-          404: {
-            type: 'object',
-            properties: {
-              sucesso: { type: 'boolean' },
-              erro: { type: 'string' },
-            },
-          },
-        },
-      },
-    },
-    controller.aprovar
   );
 }

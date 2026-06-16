@@ -71,7 +71,7 @@ export class AlunoRepository {
         turmas: JSON.stringify(dto.turmas ?? []),
         matricula: this.gerarMatricula(),
         role: UserRole.ALUNO,
-        status: StatusUsuario.ATIVO,
+        status: StatusUsuario.PENDENTE,
       },
     });
   }
@@ -105,6 +105,13 @@ export class AlunoRepository {
 
   async contar(): Promise<number> {
     return prisma.aluno.count();
+  }
+
+  async aprovar(id: string) {
+    return prisma.aluno.update({
+      where: { id },
+      data: { status: StatusUsuario.ATIVO },
+    });
   }
 }
 

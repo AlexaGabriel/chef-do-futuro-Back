@@ -8,6 +8,7 @@ export enum StatusUsuario {
   ATIVO = 'ativo',
   INATIVO = 'inativo',
   SUSPENSO = 'suspenso',
+  PENDENTE = 'pendente',
 }
 
 export enum NivelCulinaria {
@@ -230,6 +231,83 @@ export interface AtualizarCursoDTO {
   categoria?: string;
   tags?: string[];
   secoes?: Secao[];
+}
+
+// Tipos de Turma
+export enum StatusTurma {
+  ATIVA = 'ativa',
+  CONCLUIDA = 'concluida',
+  CANCELADA = 'cancelada',
+}
+
+export enum PeriodoTurma {
+  MATUTINO = 'matutino',
+  VESPERTINO = 'vespertino',
+  NOTURNO = 'noturno',
+  INTEGRAL = 'integral',
+}
+
+export interface Turma extends BaseEntity {
+  nome: string;
+  codigo: string;
+  cursoId: string;
+  periodo: PeriodoTurma;
+  capacidade: number;
+  status: StatusTurma;
+  dataInicio: string;
+  dataFim: string;
+}
+
+export interface CriarTurmaDTO {
+  nome: string;
+  codigo: string;
+  periodo: PeriodoTurma;
+  capacidade?: number;
+  dataInicio: string;
+  dataFim: string;
+}
+
+export interface AtualizarTurmaDTO {
+  nome?: string;
+  codigo?: string;
+  periodo?: PeriodoTurma;
+  capacidade?: number;
+  status?: StatusTurma;
+  dataInicio?: string;
+  dataFim?: string;
+}
+
+// Tipos de Disciplina
+export enum StatusDisciplina {
+  ATIVA = 'ativa',
+  INATIVA = 'inativa',
+}
+
+export interface Disciplina extends BaseEntity {
+  nome: string;
+  codigo: string;
+  cursoId: string;
+  cargaHoraria: number;
+  ementa?: string;
+  periodo: string;
+  status: StatusDisciplina;
+}
+
+export interface CriarDisciplinaDTO {
+  nome: string;
+  codigo: string;
+  cargaHoraria: number;
+  ementa?: string;
+  periodo: string;
+}
+
+export interface AtualizarDisciplinaDTO {
+  nome?: string;
+  codigo?: string;
+  cargaHoraria?: number;
+  ementa?: string;
+  periodo?: string;
+  status?: StatusDisciplina;
 }
 
 // Tipos de Autenticação

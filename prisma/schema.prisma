@@ -87,9 +87,46 @@ model Curso {
   criadoEm          DateTime @default(now())
   atualizadoEm      DateTime @updatedAt
 
-  professor         Professor @relation(fields: [professorId], references: [id])
+  professor         Professor    @relation(fields: [professorId], references: [id])
+  turmas            Turma[]
+  disciplinas       Disciplina[]
 
   @@map("cursos")
+}
+
+model Turma {
+  id            String   @id @default(uuid())
+  nome          String
+  codigo        String   @unique
+  cursoId       String
+  periodo       String
+  capacidade    Int      @default(30)
+  status        String   @default("ativa")
+  dataInicio    String
+  dataFim       String
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @updatedAt
+
+  curso         Curso    @relation(fields: [cursoId], references: [id], onDelete: Cascade)
+
+  @@map("turmas")
+}
+
+model Disciplina {
+  id            String   @id @default(uuid())
+  nome          String
+  codigo        String   @unique
+  cursoId       String
+  cargaHoraria  Int
+  ementa        String?
+  periodo       String
+  status        String   @default("ativa")
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @updatedAt
+
+  curso         Curso    @relation(fields: [cursoId], references: [id], onDelete: Cascade)
+
+  @@map("disciplinas")
 }
 
 model Mensagem {
